@@ -14,6 +14,7 @@ module.exports = {
 
     '/04_java/': [
         ['', '简介'],
+        ['java1', 'java常用工具类'],
     ],
 
     '/05_linux/': [
@@ -27,9 +28,4 @@ module.exports = {
     '/07_springboot/': [
         ['', '简介'],
     ],
-    //
-    // '/': [
-    //     '',
-    //     '/03_about/',
-    // ]
 }
