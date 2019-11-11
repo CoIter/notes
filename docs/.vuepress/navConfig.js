@@ -1,30 +1,26 @@
 module.exports = [
-    { text: 'Home', link: '/' },
-    { text: 'Guide', link: '/guide/', target:'_blank'},
+    { text: '主页', link: '/' },
+    { text: 'markdown语法', link: '/02_guide/', target:'_blank'},
     {
-        text: 'knowledge',
+        text: '练习项目',
         items: [
-            { text: 'css', items: [
-                    { text: 'css1', link: '/css/css1' },
-                    { text: 'css2', link: '/css/css2' },
-                ]
-            },
-            { text: 'javaScript', items: [
-                    { text: 'javaScript1', link: '/javaScript/javaScript1' },
-                    { text: 'javaScript2', link: '/javaScript/javaScript2' },
-                ]
-            },
+            {text: 'SpringBoot集成MyBatisPlus', link: '/01_proj/springboot_mybatisplus'},
         ]
     },
     {
-        text: 'Languages',
-        link: '/language/',
-        ariaLabel: 'Language Menu',
-        items: [
-            { text: 'Chinese', link: '/language/chinese/' },
-            { text: 'Japanese', link: '/language/japanese/' },
+        text: '学习笔记', items: [
+            {
+                text: '后端笔记', items: [
+                    {text: '04_java', link: '/04_java/'},
+                    {text: '06_spring', link: '/06_spring/'},
+                    {text: '07_springboot', link: '/07_springboot/'}
+                ]
+            }, {
+                text: 'Linux',
+                items: [{text: '05_linux', link: '/05_linux/'}]
+            }
         ]
     },
-    { text: 'about', link: '/about/', target:'_self', rel:'' },
-    { text: 'External', link: 'www.baidu.com'},
+    { text: '03_about', link: '/03_about/', target:'_self', rel:'' },
+    { text: 'Gitee', link: 'https://gitee.com/'},
 ]

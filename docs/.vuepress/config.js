@@ -5,7 +5,7 @@ const sider = require('./siderbarConfig');
 module.exports = {
     title: 'MAXSH NOTES',
     description: 'Maxsh的笔记',
-    base: '/prj_book/',
+    base: '/notes/',
     locales: {
         '/': {
             lang: 'zh-CN',

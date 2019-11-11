@@ -14,7 +14,7 @@ module.exports = {
     // fallback
     '/': [
         '',        /* / */
-        '/about/', /* /contact.html */
-        '/about/test'    /* /about.html */
+        '/03_about/', /* /contact.html */
+        '/03_about/test'    /* /03_about.html */
     ]
 }
