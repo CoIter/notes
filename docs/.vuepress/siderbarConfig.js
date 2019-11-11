@@ -1,20 +1,35 @@
 module.exports = {
-    '/css/': [
-        '',     /* /foo/ */
-        'css1',  /* /foo/one.html */
-        'css2'   /* /foo/two.html */
+    '/01_proj/': [
+        ['', '简介'],
+        'springboot_mybatisplus',
     ],
 
-    '/javascript/': [
-        '',      /* /bar/ */
-        'javascript1', /* /bar/three.html */
-        'javascript2'   /* /bar/four.html */
+    '/02_guide/': [
+        ['', '简介'],
     ],
 
-    // fallback
-    '/': [
-        '',        /* / */
-        '/03_about/', /* /contact.html */
-        '/03_about/test'    /* /03_about.html */
-    ]
+    '/03_about/': [
+        '',
+    ],
+
+    '/04_java/': [
+        ['', '简介'],
+    ],
+
+    '/05_linux/': [
+        ['', '简介'],
+    ],
+
+    '/06_spring/': [
+        ['', '简介'],
+    ],
+
+    '/07_springboot/': [
+        ['', '简介'],
+    ],
+    //
+    // '/': [
+    //     '',
+    //     '/03_about/',
+    // ]
 }

@@ -3,7 +3,7 @@ home: true
 heroImage: /img/logo.jpg
 heroText: 我的全栈笔记
 actionText: 来吧 →
-actionLink: /about/
+actionLink: /
 features:
 - title: 简洁至上
   details: “领悟”、“获得新知” 、 “反复练习”
