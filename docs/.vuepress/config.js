@@ -6,7 +6,7 @@ module.exports = {
     title: 'MAXSH NOTES',
     description: 'Maxsh的笔记',
     dest: './dist',//默认在.vuepress下
-    base: '/',
+    base: '/notes/',
     locales: {
         '/': {
             lang: 'zh-CN',
