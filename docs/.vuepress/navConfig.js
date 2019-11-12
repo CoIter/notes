@@ -21,6 +21,12 @@ module.exports = [
             }
         ]
     },
+    {
+        text: '工具',
+        items: [
+            {text: 'Docker绿皮书', link: 'http://docs.nigeerhuo.com/docker'},
+        ]
+    },
     { text: 'about', link: '/03_about/', target:'_self', rel:'' },
     { text: 'Gitee', link: 'https://gitee.com/'},
 ]
