@@ -22,7 +22,8 @@ export default {
                 appKey: 'Jxn712YoSvqELH3thEgKkEzY',
                 notify:false,
                 verify:false,
-                avatar:'retro',
+                avatar:'wavatar',
+                path:window.location.pathname,
                 placeholder: '欢迎留言...'
             })
         }
