@@ -6,6 +6,7 @@ description: springboot笔记
 ## 目录
   - [国际惯例先来一个 Hello World](01_HelloWorld.md)
   - [SpringBoot中的单元测试](02_Test.md)
+  - [SpringBoot开发Web应用](02_Web.md)
   
 ::: tip Spring、Spring Boot 和 Spring Cloud 的关系
 &emsp;&emsp;Spring 最初核心的两大核心功能 Spring IoC 和 Spring Aop 成就了 Spring，Spring 在这两大核心功能上不断地发展，才有了 Spring 事务、Spring MVC 等一系列伟大的产品，最终成就了 Spring 帝国，到了后期 Spring 几乎可以解决企业开发中的所有问题。

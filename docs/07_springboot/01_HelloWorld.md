@@ -5,11 +5,11 @@ description: springboot Hello World
 # SpringBoot Hello World
 1. 在idea中利用Spring Initializr 新建Hello World工程
 
-<img src="/screenshot/springboot/01/01.png" style="zoom:80%">
+<img src="../screenshot/springboot/01/01.png" style="zoom:80%">
 
 2.勾选Spring Web的starter
 
-<img src="/screenshot/springboot/01/02.png" style="zoom:80%">
+<img src="../screenshot/springboot/01/02.png" style="zoom:80%">
 
 
 
@@ -29,7 +29,7 @@ public class HelloWorldController {
 
 4.项目结构如下
 
-<img src="/screenshot/springboot/01/03.png">
+<img src="../screenshot/springboot/01/03.png">
 
 4.启动主程序
 

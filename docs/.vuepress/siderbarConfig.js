@@ -29,5 +29,6 @@ module.exports = {
         ['', '简介'],
         ['01_HelloWorld', 'SpringBoot Hello World'],
         ['02_Test', 'SpringBoot中单元测试'],
+        ['02_Web', 'SpringBootDemo'],
     ],
 }
