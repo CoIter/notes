@@ -27,5 +27,7 @@ module.exports = {
 
     '/07_springboot/': [
         ['', '简介'],
+        ['01_HelloWorld', 'SpringBoot Hello World'],
+        ['02_Test', 'SpringBoot中单元测试'],
     ],
 }

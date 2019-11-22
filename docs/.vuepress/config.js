@@ -7,6 +7,7 @@ module.exports = {
     description: 'Maxsh的笔记',
     dest: './dist',//默认在.vuepress下
     base: '/notes/',
+    port: 8088,
     locales: {
         '/': {
             lang: 'zh-CN',
