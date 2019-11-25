@@ -257,3 +257,147 @@ public class WebConfiguration {
 
 
 ## 配置文件
+
+在 application.properties 中配置：
+
+    maxsh.title=hello
+    maxsh.description=hello,world
+在application.yml 文件中配置：
+
+```
+maxsh：
+   title： hello
+   description： hello,world
+```
+
+::: warning 注意
+
+同时存在 application.yml 和 application.properties，并且里面配置相同，application.properties 的配置会覆盖 application.yml。
+
+:::
+
+### 读取单个配置项
+
+ 当需要从配置文件加载单个配置内容时，只需要使用 `@Value` 属性即可，新建 PropertiesTest 测试类进行测试。 
+
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class PropertiesTest {
+    @Value("${maxsh.title}")
+    private String title;
+
+    @Test
+    public void testSingle() {
+        assertThat(title).isEqualTo("hello");
+
+    }
+}
+```
+
+
+
+
+
+### 读取多个配置
+
+ 通常在项目中使用配置文件时，往往需要加载多个配置项，比如数据库连接参数等，通常会定义一个对象来接收多个配置项，方便在项目中使用。比如定义一个 AppProperties对象，来接收所有以 maxsh 开头的配置内容。 
+
+```java
+@Component
+@ConfigurationProperties(prefix="maxsh")
+public class AppProperties {
+    private String title;
+    private String description;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
+```
+
+
+
+此时idea会提示Spring Boot Configuration Annotaion Processor not found in classpath，所以需要加入spring-boot-configuration-processor依赖来处理配置文件。
+
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-configuration-processor</artifactId>
+    <optional>true</optional>
+</dependency>
+```
+
+
+
+ 写单元测试进行验证，使用属性时直接将 AppProperties对象注入即可。 
+
+```java
+@Resource
+private AppProperties properties;
+
+@Test
+public void testMore() throws Exception {
+    System.out.println("title:"+properties.getTitle());
+    System.out.println("description:"+properties.getDescription());
+}
+```
+
+
+
+ 运行 test 后输出结果： 
+
+```
+title:hello
+description:hello,world
+```
+
+
+
+
+
+###  自定义配置文件
+
+ 有时候需要自定义配置文件，以便和系统使用的 application.properties 文件区分开，避免混淆。 在 resources 目录下创建一个 ma.properties 文件，内容如下： 
+
+```
+ma.title=ma
+ma.desc=ma,world
+```
+
+ 对比上面读取多个配置示例，多了一个注解来指明配置文件地址：@PropertySource("classpath:other.properties")，同样创建一个测试方法，检测是否正确加载了外部配置文件。 
+
+
+
+```java
+@Resource
+private MaProperties maProperties;
+
+@Test
+public void testMa() throws Exception {
+    System.out.println("title:"+maProperties.getTitle());
+    System.out.println("desc:"+maProperties.getDesc());
+}
+```
+
+
+
+ 运行 test 后输出结果： 
+
+```
+title:ma
+desc:ma,world
+```
+
+ 说明自定义配置文件加载成功。 
