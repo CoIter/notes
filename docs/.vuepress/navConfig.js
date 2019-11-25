@@ -25,6 +25,7 @@ module.exports = [
         text: '工具',
         items: [
             {text: 'Docker绿皮书', link: 'http://docs.nigeerhuo.com/docker'},
+            {text: '用命令行生成目录结构树', link: '/08_tool/01_tree'},
         ]
     },
     { text: 'about', link: '/03_about/', target:'_self', rel:'' },
