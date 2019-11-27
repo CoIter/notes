@@ -20,6 +20,7 @@ module.exports = {
         ['meta', { rel: 'theme-color', content:'#ffffff' }],
         ['meta', { name: 'mobile-web-app-capable', content: 'yes' }],
         ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
+        ['meta', { name: 'apple-mobile-web-app-title', content: 'Maxsh的笔记' }],
         ['link', { rel: 'apple-touch-icon', href: '/images/apple-touch-icon.png' }],
         ['link', { rel: 'mask-icon', href: '/images/safari-pinned-tab.svg', color: '#3eaf7c' }],
         ['meta', { name: 'msapplication-TileImage', content: '/images/mstile-150x150.png' }],
