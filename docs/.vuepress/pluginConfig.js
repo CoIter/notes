@@ -8,7 +8,7 @@ module.exports = {
     },
     '@vuepress/back-to-top': true,
     '@vuepress/medium-zoom': {
-        selector: '.theme-default-content:not(.custom) img',
+        selector: '.theme-default-content:not(.custom) images',
         // medium-zoom options here
         // See: https://github.com/francoischalifour/medium-zoom#options
         options: {

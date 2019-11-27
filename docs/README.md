@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /img/logo.jpg
+heroImage: /images/logo.jpg
 heroText: 我的全栈笔记
 actionText: 来吧 →
 actionLink: /03_about/
