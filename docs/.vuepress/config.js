@@ -14,16 +14,13 @@ module.exports = {
         }
     },
     head: [
-        ['link', { rel: 'apple-touch-icon',  href: '/images/icons/icon-152x152.png' }],
-        ['link', { rel: 'icon', type:"image/png",  href: '/images/icons/icon-192x192.png' }],
-        ['link', { rel: 'manifest', href: '/manifest.json' }],
-        ['meta', { rel: 'theme-color', content:'#ffffff' }],
-        ['meta', { name: 'mobile-web-app-capable', content: 'yes' }],
-        ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-        ['meta', { name: 'apple-mobile-web-app-title', content: 'Notes' }],
-        ['link', { rel: 'mask-icon', href: '/images/icons/safari-pinned-tab.svg', color: '#3eaf7c' }],
-        ['meta', { name: 'msapplication-TileImage', content: '/images/icons/ms-icon-144x144.png' }],
-        ['meta', { name: 'msapplication-TileColor', content: '#ffffff' }]
+        ['link', { rel: 'apple-touch-icon',  sizes:"180x180", href: '/images/icons/apple-touch-icon.png' }],
+        ['link', { rel: 'icon', type:"image/png",  sizes:"32x32", href: '/images/icons/favicon-32x32.png' }],
+        ['link', { rel: 'icon', type:"image/png",  sizes:"16x16", href: '/images/icons/favicon-16x16.png' }],
+        ['link', { rel: 'manifest', content:'/manifest.json' }],
+        ['link', { rel: 'mask-icon', href: '/images/icons/safari-pinned-tab.svg', color:'#5bbad5' }],
+        ['meta', { name: 'msapplication-TileColor', content: '#ffc40d' }],
+        ['meta', { rel: 'theme-color', content:'#ffffff' }]
     ],
     plugins: plugin,
     themeConfig: {
