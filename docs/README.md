@@ -1,8 +1,8 @@
 ---
 home: true
 heroImage: /images/logo.jpg
-heroText: 我的全栈笔记
-actionText: 来吧 →
+heroText: Maxsh学习笔记
+actionText: 概览 →
 actionLink: /03_about/
 features:
 - title: 简洁至上
