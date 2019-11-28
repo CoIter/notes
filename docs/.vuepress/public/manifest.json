@@ -1,7 +1,7 @@
 {
-  "name": "MaxSh Notes",
-  "short_name": "MaxSh Notes",
-  "description": "MaxSh document",
+  "name": "自留地",
+  "short_name": "自留地",
+  "description": "maxsh的自留地",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",

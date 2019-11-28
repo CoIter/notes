@@ -20,7 +20,8 @@ module.exports = {
         ['link', { rel: 'manifest', href:'/manifest.json' }],
         ['link', { rel: 'mask-icon', href: '/images/icons/safari-pinned-tab.svg', color:'#5bbad5' }],
         ['meta', { name: 'msapplication-TileColor', content: '#ffc40d' }],
-        ['meta', { rel: 'theme-color', content:'#ffffff' }]
+        ['meta', { name: 'msapplication-TileImage', content: '/images/icons/mstile-144x144.png' }],
+        ['meta', { name: 'theme-color', content:'#ffffff' }]
     ],
     plugins: plugin,
     themeConfig: {
