@@ -14,17 +14,16 @@ module.exports = {
         }
     },
     head: [
-        ['link', { rel: 'apple-touch-icon', href: '/images/apple-touch-icon.png' }],
-        ['link', { rel: 'icon', href: '/images/favicon.ico' }],
+        ['link', { rel: 'apple-touch-icon',  href: '/images/icons/icon-152x152.png' }],
+        ['link', { rel: 'icon', type:"image/png",  href: '/images/icons/icon-192x192.png' }],
         ['link', { rel: 'manifest', href: '/manifest.json' }],
         ['meta', { rel: 'theme-color', content:'#ffffff' }],
         ['meta', { name: 'mobile-web-app-capable', content: 'yes' }],
         ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-        ['meta', { name: 'apple-mobile-web-app-title', content: 'Maxsh的笔记' }],
-        ['link', { rel: 'apple-touch-icon', href: '/images/apple-touch-icon.png' }],
-        ['link', { rel: 'mask-icon', href: '/images/safari-pinned-tab.svg', color: '#3eaf7c' }],
-        ['meta', { name: 'msapplication-TileImage', content: '/images/mstile-150x150.png' }],
-        ['meta', { name: 'msapplication-TileColor', content: '#000000' }]
+        ['meta', { name: 'apple-mobile-web-app-title', content: 'Notes' }],
+        ['link', { rel: 'mask-icon', href: '/images/icons/safari-pinned-tab.svg', color: '#3eaf7c' }],
+        ['meta', { name: 'msapplication-TileImage', content: '/images/icons/ms-icon-144x144.png' }],
+        ['meta', { name: 'msapplication-TileColor', content: '#ffffff' }]
     ],
     plugins: plugin,
     themeConfig: {
