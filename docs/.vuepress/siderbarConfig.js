@@ -35,6 +35,7 @@ module.exports = {
                 ['02_Test', 'SpringBoot中单元测试'],
                 ['02_Web', 'SpringBootDemo'],
                 ['03_Jsp', 'SpringBoot中使用Jsp'],
+                ['04_Upload', 'SpringBoot和Freemarker文件上传'],
             ]
         }
     ]

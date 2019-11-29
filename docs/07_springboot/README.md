@@ -8,10 +8,7 @@ description: springboot笔记
   - [SpringBoot中的单元测试](02_Test.md)
   - [SpringBoot开发Web应用](02_Web.md)
   - [SpringBoot中使用Jsp](03_Jsp.md)
-
-
-
-<br/>
+  - [SpringBoot和Freemarker文件上传](04_Upload.md)
 ------
 <br/><br/><br/><br/><br/><br/>
 
