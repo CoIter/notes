@@ -9,6 +9,13 @@ description: springboot笔记
   - [SpringBoot开发Web应用](02_Web.md)
   - [SpringBoot中使用Jsp](03_Jsp.md)
   - [SpringBoot和Freemarker文件上传](04_Upload.md)
+  - [使用SpringBoot上传文件到FastDFS](05_FastDFS.md)
+  - [SpringBoot构建RESTful Web服务](06_RESTful.md)
+  - [使用Swagger 2 构建API文档](07_Swagger.md)
+  - [SpringBoot WebSocket创建聊天室](08_WebSocket.md)
+  - [SpringBoot使用JDBC操作数据库](09_Jdbc.md)
+  - [SpringBoot集成Mybatis XML 配置版](10_MybatisXML.md)
+  - [SpringBoot集成Mybatis 注解版](11_MybatisAnnotation.md)
 ------
 <br/><br/><br/><br/><br/><br/>
 

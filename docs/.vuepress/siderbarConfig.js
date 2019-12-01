@@ -36,6 +36,13 @@ module.exports = {
                 ['02_Web', 'SpringBootDemo'],
                 ['03_Jsp', 'SpringBoot中使用Jsp'],
                 ['04_Upload', 'SpringBoot和Freemarker文件上传'],
+                ['05_FastDFS', '使用SpringBoot上传文件到FastDFS'],
+                ['06_RESTful', 'SpringBoot构建RESTful Web服务'],
+                ['07_Swagger', '使用Swagger 2 构建API文档'],
+                ['08_WebSocket', 'SpringBoot WebSocket创建聊天室'],
+                ['09_Jdbc', 'SpringBoot使用JDBC操作数据库'],
+                ['10_MybatisXML', 'SpringBoot集成Mybatis XML 配置版'],
+                ['11_MybatisAnnotation', 'SpringBoot集成Mybatis 注解版'],
             ]
         }
     ]
