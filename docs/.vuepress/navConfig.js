@@ -1,6 +1,5 @@
 module.exports = [
     { text: '主页', link: '/' },
-    { text: 'markdown语法', link: '/02_guide/', target:'_blank'},
     {
         text: '练习项目',
         items: [
@@ -24,6 +23,7 @@ module.exports = [
     {
         text: '工具',
         items: [
+            { text: 'markdown语法', link: '/02_guide/', target:'_blank'},
             {text: 'Docker绿皮书', link: 'http://docs.nigeerhuo.com/docker'},
             {text: '用命令行生成目录结构树', link: '/08_tool/01_tree'},
             {text: 'freemarker在线手册', link: 'http://freemarker.foofun.cn/dgui_template_overallstructure.html'},
