@@ -408,6 +408,6 @@ public Result<User> getUser(@PathVariable String id) {
 
 
 
-::: tip 源码 
-[源码链接](   https://github.com/maxsh-io/proj_springboot_case/tree/master/swagger   ) 
-:::
+
+
+> :smiley:  ​[源码链接](   https://github.com/maxsh-io/proj_springboot_case/tree/master/swagger   ) 
