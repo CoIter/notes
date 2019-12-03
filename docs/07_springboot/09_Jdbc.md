@@ -263,9 +263,9 @@ class JdbcApplicationTests {
 }
 ```
 
-# 多数据源的使用
+## 多数据源的使用
 
-## 配置文件
+### 配置文件
 
 ```properties
 spring.datasource.primary.jdbc-url=jdbc:mysql://localhost:3306/test1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
@@ -283,7 +283,7 @@ spring.datasource.secondary.driver-class-name=com.mysql.cj.jdbc.Driver
   这里使用的是 spring.datasource.*.jdbc-url，因为默认连接池 HikariCP 读取的是 jdbc-url。 
 :::
 
-## 配置数据源并初始化JDBC
+### 配置数据源并初始化JDBC
 
 ```java
 @Configuration
@@ -339,7 +339,7 @@ public int save(User user,JdbcTemplate jdbcTemplate) {
 
 
 
-## 测试
+### 测试
 
 ```java
 @SpringBootTest
