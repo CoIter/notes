@@ -39,7 +39,6 @@ Spring Boot 提供了一些组合注解。这些注解来帮助简化常用的 H
 
  按照 RESTful 的思想我们来设计一组对用户操作的 RESTful API： 
 <style> table {width: 100%;} table th:nth-of-type(3) { width: 100%; } </style>
-
 | <div style="width:80px;">请求</div> | <div style="width:120px;">url</div> | 说明           |
 | :----------------------------------: | :---------------------------------- | :-------------- |
 |                 get                  | /users                              | 获取所有用户   |
