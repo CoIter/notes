@@ -3,7 +3,7 @@ description: SpringBoot中使用JDBC
 
 ---
 
-# SpringBoot中使用JDBC操作数据库
+# SpringBoot使用JDBC操作数据库
 
 JDBC（Java Data Base Connectivity，Java 数据库连接）是一种用于执行 SQL 语句的 Java API，可以为多种关系数据库提供统一访问，它由一组用 Java 语言编写的类和接口组成。 
 
