@@ -230,5 +230,154 @@ public void testUser()  {
     //查询
     List<User> users = userMapper.getAll();
 }
+
+@Test
+@DisplayName("测试分页查询")
+public void testPage() {
+    UserParam userParam =new UserParam();
+    userParam.setSex("MAN");
+    userParam.setCurrentPage(1);
+    List<User> users =userMapper.getList(userParam);
+    long       count =userMapper.getCount(userParam);
+    Page       page  = new Page(userParam,count,users);
+    System.out.println(page);
+}
 ```
 
+
+
+## 多数据源配置
+
+### properties 配置
+
+application.properties 添加相关配置：
+
+```properties
+mybatis.config-location=classpath:mybatis/mybatis-config.xml
+
+spring.datasource.one.jdbc-url=jdbc:mysql://localhost:3306/test1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+spring.datasource.one.username=root
+spring.datasource.one.password=123456
+spring.datasource.one.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.two.jdbc-url=jdbc:mysql://localhost:3306/test2?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+spring.datasource.two.username=root
+spring.datasource.two.password=123456
+spring.datasource.two.driver-class-name=com.mysql.cj.jdbc.Driver
+
+```
+
+### 配置DataSource
+
+::: danger 注意
+
+在多数据源的情况下，不需要在启动类添加：@MapperScan("com.xxx.mapper") 的注解。
+
+在多数据源中只能指定一个 @Primary 作为默认的数据源使用。
+
+:::
+
+配置第一个数据源
+
+```java
+@Configuration
+@MapperScan(basePackages = "com.maxsh.mapper.one", sqlSessionTemplateRef  = "oneSqlSessionTemplate")
+public class DSOneConfig {
+    @Bean(name = "oneDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.one")
+    @Primary
+    public DataSource testDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+    @Bean(name = "oneSqlSessionFactory")
+    @Primary
+    public SqlSessionFactory testSqlSessionFactory(@Qualifier("oneDataSource") DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/one/*.xml"));
+        return bean.getObject();
+    }
+    @Bean(name = "oneTransactionManager")
+    @Primary
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("oneDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+    @Bean(name = "oneSqlSessionTemplate")
+    @Primary
+    public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("oneSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+}
+```
+
+配置第二个数据源，方法上需要去掉 @Primary 注解。
+
+```java
+@Configuration
+@MapperScan(basePackages = "com.maxsh.mapper.two", sqlSessionTemplateRef  = "twoSqlSessionTemplate")
+public class DSTwoConfig {
+    @Bean(name = "twoDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.two")
+    public DataSource testDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "twoSqlSessionFactory")
+    public SqlSessionFactory testSqlSessionFactory(@Qualifier("twoDataSource") DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/two/*.xml"));
+        return bean.getObject();
+    }
+
+    @Bean(name = "twoTransactionManager")
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("twoDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean(name = "twoSqlSessionTemplate")
+    public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("twoSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+}
+
+```
+
+
+
+::: tip 总结多数据源的创建过程
+
+1. 先创建 DataSource
+2. 注入到 SqlSessionFactory 中
+3. 创建事务
+4. 将 SqlSessionFactory 注入到创建的 SqlSessionTemplate 中
+5. 将 SqlSessionTemplate 注入到对应的 Mapper 包路径下（需要指定分库的 Mapper 包路径）
+
+:::
+
+简单测试一下
+
+```java
+@SpringBootTest
+@DisplayName("测试Mybatis多数据源")
+class MybatisXmlMultiDatasourceApplicationTests {
+
+    @Autowired
+    private User1Mapper user1Mapper;
+    @Autowired
+    private User2Mapper user2Mapper;
+
+    @Test
+    public void testInsert() throws Exception {
+        user1Mapper.insert(new User("aa111", "a123456", UserSexEnum.MAN, 18));
+        user1Mapper.insert(new User("bb111", "b123456", UserSexEnum.WOMAN, 16));
+        user2Mapper.insert(new User("cc222", "b123456", UserSexEnum.MAN, 21));
+    }
+}
+```
+
+
+
+:smiley: [集成Mybatis源码]( https://github.com/maxsh-io/proj_springboot_case/tree/master/jdbc )
+
+:smiley: [集成Mybatis-multi-datasource源码](  https://github.com/maxsh-io/proj_springboot_case/tree/master/jdb-multi-datasource  )
