@@ -188,3 +188,9 @@ class UserSqlProvider{
 其中拼接sql可以使用StringBuilder自行拼接，也可以使用mybatis提供的结构化的SQL。
 
 > 更多结构化的 SQL 语法请参考 [SQL 语句构建器类](http://www.mybatis.org/mybatis-3/zh/statement-builders.html)。
+
+
+
+
+
+> :smiley: [源码]( https://github.com/maxsh-io/proj_springboot_case/tree/master/mybatis-annotation )
