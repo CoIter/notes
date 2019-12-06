@@ -378,6 +378,6 @@ class MybatisXmlMultiDatasourceApplicationTests {
 
 
 
-:smiley: [集成Mybatis源码]( https://github.com/maxsh-io/proj_springboot_case/tree/master/jdbc )
-
-:smiley: [集成Mybatis-multi-datasource源码](  https://github.com/maxsh-io/proj_springboot_case/tree/master/jdb-multi-datasource  )
+> :smiley: [集成Mybatis源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/mybatis-xml)
+>
+> :smiley: [集成Mybatis-multi-datasource源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/mybatis-xml-multi-datasource  )
