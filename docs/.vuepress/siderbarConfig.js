@@ -43,6 +43,7 @@ module.exports = {
                 ['09_Jdbc', 'SpringBoot使用JDBC操作数据库'],
                 ['10_MybatisXML', 'SpringBoot集成Mybatis XML 配置版'],
                 ['11_MybatisAnnotation', 'SpringBoot集成Mybatis 注解版'],
+                ['12_SpringDataJPA', 'Spring Data JPA的使用'],
             ]
         }
     ]
