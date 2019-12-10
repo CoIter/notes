@@ -263,4 +263,88 @@ List<UserEntity> findByUserNameOrderByEmailDesc(String email);
 
 ## 高级用法
 
+### 自定义 SQL 查询
+
+- 在 SQL 的查询方法上面使用 @Query 注解，在注解内写 Hql 来查询内容。
+
+```java
+@Query("select u from UserEntity u")
+Page<UserEntity> findALL(Pageable pageable);
+```
+
+- 当然如果感觉使用原生 SQL 更习惯，它也是支持的，需要再添加一个参数 nativeQuery = true。
+
+```java
+@Query(value="select u.* from user u where u.nick_name = ?1", nativeQuery = true)
+Page<UserEntity> findByNickName(String nickName, Pageable pageable);
+```
+
+- @Query 上面的 1 代表的是方法参数里面的顺序，如果有多个参数也可以按照这个方式添加 1、2、3....。除了按照这种方式传参外，还可以使用 @Param 来支持。
+
+```java
+@Query(value="select u.* from user u where u.nick_name = :nickName", nativeQuery = true)
+Page<UserEntity> findByNickName2(@Param("nickName") String nickName, Pageable pageable);
+```
+
+- 如涉及到删除和修改需要加上 @Modifying，也可以根据需要添加 @Transactional 对事务的支持、操作超时设置等。
+
+```java
+@Transactional(timeout = 10)
+@Modifying
+@Query("update UserEntity set userName = ?1 where id = ?2")
+int modifyById(String  userName, Long id);
+
+@Transactional
+@Modifying
+@Query("delete from UserEntity where id = ?1")
+void deleteByUserId(Long id);
+```
+
+### 使用已命名的查询
+
+除了使用 @Query 注解外，还可以预先定义好一些查询，并为其命名，然后再 Repository 中添加相同命名的方法。
+
+```java
+@Entity
+@Table(name = "user")
+@NamedQueries({
+        @NamedQuery(name = "UserEntity.findByPassWord", query = "select u from UserEntity u where u.passWord = ?1"),
+        @NamedQuery(name = "UserEntity.findByNickName", query = "select u from UserEntity u where u.nickName = ?1"),
+})
+public class UserEntity implements Serializable{
+	...
+}
+```
+
+通过 @NamedQueries 注解可以定义多个命名 Query，@NamedQuery 的 name 属性定义了 Query 的名称，注意加上 Entity 名称 . 作为前缀，query 属性定义查询语句。然后在UserRepository中添加对应的方法。
+
+```java
+List<UserEntity> findByPassWord(String passWord);
+List<UserEntity> findByNickName(String nickName);
+```
+
+
+
+### Query 的查找策略
+
+查询方法有三种方式：
+
+1. 通过方法名自动创建 Query
+2. 通过 @Query 注解实现自定义 Query
+3. 通过 @NamedQuery 注解来定义 Query
+
+可以通过配置 @EnableJpaRepositories 的 queryLookupStrategy 属性来配置 Query 查找策略：
+
+- CREATE：尝试从查询方法名构造特定于存储的查询。一般的方法是从方法名中删除一组已知的前缀，并解析方法的其余部分。
+- USE_DECLARED_QUERY：尝试查找已声明的查询，如果找不到，则抛出异常。查询可以通过某个地方的注释定义，也可以通过其他方式声明。
+- CREATE_IF_NOT_FOUND（默认）：CREATE 和 USE_DECLARED_QUERY 的组合，它首先查找一个已声明的查询，如果没有找到已声明的查询，它将创建一个自定义方法基于名称的查询。它允许通过方法名进行快速查询定义，还可以根据需要引入声明的查询来定制这些查询调优。
+
+一般情况下使用默认配置即可，如果确定项目 Query 的具体定义方式，可以更改上述配置，例如，全部使用 @Query 来定义查询，又或者全部使用命名的查询。
+
+
+
+### 限制查询
+
+
+
 ## 多数据源的用法
