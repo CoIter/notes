@@ -345,6 +345,196 @@ List<UserEntity> findByNickName(String nickName);
 
 ### 限制查询
 
+有时候我们只需要查询前 N 个元素，或者只取前一个实体。
+
+```java
+UserEntity findFirstByOrderByNickNameAsc();
+
+UserEntity findTopByOrderByAgeDesc();
+
+Page<UserEntity> queryFirst10ByNickName(String nickName, Pageable pageable);
+
+List<UserEntity> findFirst10ByNickName(String nickName, Sort sort);
+
+List<UserEntity> findTop10ByNickName(String nickName, Pageable pageable);
+```
+
+### 复杂查询
+
+一般可以通过 AND 或者 OR 等连接词来不断拼接属性来构建多条件查询，但如果参数大于 6 个时，方法名就会变得非常的长，并且还不能解决动态多条件查询的场景。JpaSpecificationExecutor 是 JPA 2.0 提供的 Criteria API 的使用封装，可以用于动态生成 Query 来满足我们业务中的各种复杂场景。Spring Data JPA 提供了 JpaSpecificationExecutor 接口，只要简单实现 toPredicate 方法就可以实现复杂的查询。
+
+JpaSpecificationExecutor 的源码很简单，根据 Specification 的查询条件返回 List、Page 或者 count 数据。在使用 JpaSpecificationExecutor 构建复杂查询场景之前，我们需要了解几个概念：
+
+- Root\<T\> root，代表了可以查询和操作的实体对象的根，通过 get("属性名") 来获取对应的值。
+- CriteriaQuery query，代表一个 specific 的顶层查询对象，它包含着查询的各个部分，比如 select 、from、where、group by、order by 等。
+- CriteriaBuilder cb，来构建 CritiaQuery 的构建器对象，其实就相当于条件或者是条件组合，并以 Predicate 的形式返回。
+
+新建一个UserDetail类。
+
+```java
+@Entity
+@Table(name = "user_detail")
+public class UserDetailEntity {
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(nullable = false, unique = true)
+    private Long userId;
+    private Integer age;
+    private String realName;
+    private String status;
+    private String hobby;
+    private String introduction;
+    private String lastLoginIp;
+
+	......
+}
+```
+
+
+
+创建 UserDetail 对应的 Repository
+
+```java
+public interface UserDetailRepository extends JpaRepository<UserDetailEntity, Long>,
+        JpaSpecificationExecutor<UserDetailEntity> {
+}
+```
+
+定义一个查询 `Page<UserDetailEntity>` 的接口：
+
+```java
+public interface UserDetailService {
+    public Page<UserDetailEntity> findByCondition(UserDetailParam detailParam, Pageable pageable);
+}
+```
+
+```java
+@Service
+public class UserDetailServiceImpl implements UserDetailService{
+
+    @Resource
+    private UserDetailRepository userDetailRepository;
+
+    @Override
+    public Page<UserDetailEntity> findByCondition(UserDetailParam detailParam, Pageable pageable) {
+
+        return userDetailRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            //equal 示例
+            if (!StringUtils.isNullOrEmpty(detailParam.getIntroduction())){
+                predicates.add(cb.equal(root.get("introduction"), detailParam.getIntroduction()));
+            }
+            //like 示例
+            if (!StringUtils.isNullOrEmpty(detailParam.getRealName())){
+                predicates.add(cb.like(root.get("realName"),"%"+detailParam.getRealName()+"%"));
+            }
+            //between 示例
+            if (detailParam.getMinAge()!=null && detailParam.getMaxAge()!=null) {
+                Predicate agePredicate = cb.between(root.get("age"), detailParam.getMinAge(), detailParam.getMaxAge());
+                predicates.add(agePredicate);
+            }
+            //greaterThan 大于等于示例
+            if (detailParam.getMinAge()!=null){
+                predicates.add(cb.greaterThan(root.get("age"),detailParam.getMinAge()));
+            }
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        }, pageable);
+    }
+}
+```
+
+### 多表查询返回自定义实体
+
+新建自定义返回实体UserInfo
+
+```java
+public class UserInfo {
+    private String userName;
+    private String email;
+    private String introduction;
+    private String hobby;
+
+    public UserInfo() {
+    }
+
+    public UserInfo(String userName, String email, String introduction, String hobby) {
+        this.userName = userName;
+        this.email = email;
+        this.introduction = introduction;
+        this.hobby = hobby;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", UserInfo.class.getSimpleName() + "[", "]")
+                .add("userName='" + userName + "'")
+                .add("email='" + email + "'")
+                .add("introduction='" + introduction + "'")
+                .add("hobby='" + hobby + "'")
+                .toString();
+    }
+}
+```
+
+1.  使用select new +对象全类名 的语法，此处的UserEntity,  UserDetailEntity为EntityManager 管理的实体，UserInfo为自定义的实体。
+
+​       在 UserDetailRepository 中添加查询的方法，返回类型设置为 UserInfo：
+
+```java
+@Query("select new com.maxsh.param.UserInfo(u.userName, u.email, d.introduction ,d.hobby) " +"from UserEntity u , UserDetailEntity d " + "where u.id=d.userId  and  d.hobby = ?1 ")
+List<UserInfo> findUserInfo(String hobby);
+```
+
+2. 定义一个结果集的接口类，接口类的内容来自于用户表和用户详情表。
+
+```java
+public interface UserDTO {
+    String getUserName();
+    String getEmail();
+    String getAddress();
+    String getHobby();
+}
+```
+
+::: danger 说明
+
+在运行中 Spring 会给接口（UserInfo）自动生产一个代理类来接收返回的结果，代码中使用 getXX 的形式来获取。
+
+:::
+
 
 
 ## 多数据源的用法
