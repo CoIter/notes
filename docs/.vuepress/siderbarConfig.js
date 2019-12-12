@@ -33,7 +33,7 @@ module.exports = {
                 ['', '介绍'],
                 ['01_HelloWorld', 'SpringBoot Hello World'],
                 ['02_Test', 'SpringBoot中单元测试'],
-                ['02_Web', 'SpringBootDemo'],
+                ['02_Web', 'SpringBoot基本使用'],
                 ['03_Jsp', 'SpringBoot中使用Jsp'],
                 ['04_Upload', 'SpringBoot和Freemarker文件上传'],
                 ['05_FastDFS', '使用SpringBoot上传文件到FastDFS'],

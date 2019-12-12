@@ -259,7 +259,8 @@ List<UserEntity> findByUserNameOrderByEmailDesc(String email);
 | FALSE              | findByActiveFalse()                      | … where x.active = false                                     |
 | IgnoreCase         | findByFirstnameIgnoreCase                | … where UPPER(x.firstame) = UPPER(?1)                        |
 
-
+> :smiley: [源码]( https://github.com/maxsh-io/proj_springboot_case/tree/master/jpa )
+>
 
 ## 高级用法
 
@@ -535,6 +536,188 @@ public interface UserDTO {
 
 :::
 
-
+> :smiley: [源码]( https://github.com/maxsh-io/proj_springboot_case/tree/master/jpa-advance )
 
 ## 多数据源的用法
+
+项目结构如下
+
+![项目结构](../screenshot/springboot/01/jpa2.png)
+
+配置 Spring Data JPA 对多数据源的使用，一般分为以下几步：
+
+- 创建数据库 test1 和 test2
+- 配置多数据源
+- 不同源的 repository 放入不同包路径
+- 声明不同的包路径下使用不同的数据源、事务支持
+- 不同的包路径下创建对应的 repository
+- 测试
+
+### 配置文件
+
+```properties
+spring.datasource.primary.jdbc-url=jdbc:mysql://localhost:3306/test1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+spring.datasource.primary.username=root
+spring.datasource.primary.password=123456
+spring.datasource.primary.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.secondary.jdbc-url=jdbc:mysql://localhost:3306/test2?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+spring.datasource.secondary.username=root
+spring.datasource.secondary.password=123456
+spring.datasource.secondary.driver-class-name=com.mysql.cj.jdbc.Driver
+
+#SQL 输出
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.hbm2ddl.auto=create
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+#format 一下 SQL 进行输出
+spring.jpa.properties.hibernate.format_sql=true
+```
+
+### 配置数据源
+
+在 DataSourceConfig 类中加载配置文件，利用 ConfigurationProperties 自动装配的特性加载两个数据源。
+
+加载第一个数据源，数据源配置以 spring.datasource.primary 开头，注意当有多个数据源时，需要将其中一个标注为 @Primary，作为默认的数据源使用。
+
+```java
+@Configuration
+public class DataSourceConfig {
+
+    @Autowired
+    private JpaProperties       jpaProperties;
+    @Autowired
+    private HibernateProperties hibernateProperties;
+
+    @Bean(name = "primaryDataSource")
+    @Primary
+    @ConfigurationProperties("spring.datasource.primary")
+    public DataSource firstDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "secondaryDataSource")
+    @ConfigurationProperties("spring.datasource.secondary")
+    public DataSource secondDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "vendorProperties")
+    public Map<String, Object> getVendorProperties() {
+        return hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings());
+    }
+}
+```
+
+配置第一个数据源
+
+```java
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        entityManagerFactoryRef="entityManagerFactoryPrimary",
+        transactionManagerRef="transactionManagerPrimary",
+        //设置dao（repo）所在位置
+        basePackages= { "com.maxsh.repository.test1" })
+public class PrimaryConfig {
+    @Autowired
+    @Qualifier("primaryDataSource")
+    private DataSource          primaryDataSource;
+    @Autowired
+    @Qualifier("vendorProperties")
+    private Map<String, Object> vendorProperties;
+
+    @Bean(name = "entityManagerFactoryPrimary")
+    @Primary
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(primaryDataSource)
+                .properties(vendorProperties)
+                //设置实体类所在位置
+                .packages("com.maxsh.model")
+                .persistenceUnit("primaryPersistenceUnit")
+                .build();
+    }
+
+    @Bean(name = "entityManagerPrimary")
+    @Primary
+    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
+        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+    }
+
+    @Bean(name = "transactionManagerPrimary")
+    @Primary
+    PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
+        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
+    }
+}
+```
+
+第二个数据源配置和第一个数据源配置类似，只是方法上去掉了注解：@Primary
+
+```java
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        entityManagerFactoryRef="entityManagerFactorySecondary",
+        transactionManagerRef="transactionManagerSecondary",
+        basePackages= { "com.maxsh.repository.test2" })
+public class SecondaryConfig {
+    @Autowired
+    @Qualifier("secondaryDataSource")
+    private DataSource secondaryDataSource;
+
+    @Autowired
+    @Qualifier("vendorProperties")
+    private Map<String, Object> vendorProperties;
+
+    @Bean(name = "entityManagerFactorySecondary")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecondary (EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(secondaryDataSource)
+                .properties(vendorProperties)
+                .packages("com.maxsh.model")
+                .persistenceUnit("secondaryPersistenceUnit")
+                .build();
+    }
+
+    @Bean(name = "entityManagerSecondary")
+    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
+        return entityManagerFactorySecondary(builder).getObject().createEntityManager();
+    }
+
+    @Bean(name = "transactionManagerSecondary")
+    PlatformTransactionManager transactionManagerSecondary(EntityManagerFactoryBuilder builder) {
+        return new JpaTransactionManager(entityManagerFactorySecondary(builder).getObject());
+    }
+}
+```
+
+项目中使用哪个数据源的操作，就注入对应包下的 repository 进行操作即可，测试一下。
+
+```java
+@SpringBootTest
+class JpaMultiDatasourceApplicationTests {
+
+    @Resource
+    private UserTest1Repository userTest1Repository;
+    @Resource
+    private UserTest2Repository userTest2Repository;
+
+    @Test
+    public void testSave() throws Exception {
+        Date       date          = new Date();
+        DateFormat dateFormat    = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
+        String     formattedDate = dateFormat.format(date);
+
+        userTest1Repository.save(new UserEntity("aa","aa123456","aa@126.com","aa", "18",formattedDate));
+        userTest1Repository.save(new UserEntity("bb","bb123456","bb@126.com","bb","18",formattedDate));
+        userTest2Repository.save(new UserEntity("cc","cc123456","cc@126.com","cc","18",formattedDate));
+    }
+
+}
+```
+
+
+
+> :smiley: [源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/jpa-multi-datasource)
