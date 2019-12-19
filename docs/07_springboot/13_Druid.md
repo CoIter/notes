@@ -219,11 +219,94 @@ spring:
 
 在生产环境中，直接在配置文件中暴露明文密码是一件非常危险的事情，出于两点考虑：对外，即使应用服务被入侵，数据库还是安全的；对内，生产环境的数据库密码理论上应该只有 dba 知道，但是代码都是在代码仓库中放着的，如果密码没有加密，每次发布前 dba 都需要手动修改配置文件后再进行打包编译。
 
-首先，我们需要通过com.alibaba.druid.filter.config.ConfigTools生成数据库密码的密文。
+首先，我们需要通过com.alibaba.druid.filter.config.ConfigTools生成数据库密码的密文。在com\alibaba\druid\1.1.20目录下执行如下命令。
 
 ```
 java -cp druid-1.1.10.jar com.alibaba.druid.filter.config.ConfigTools 123456
 ```
+
+![项目结构](../screenshot/springboot/01/druid3.png)
+
+这里我们需要将生成的公钥 `publicKey` 和密码 `password` 加入配置文件中， `application-decrypt.yml` 如下：
+
+```yaml
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    # 加密后密文，原密码为 123456
+    password: LZ2Wy3ywIqls3hT3vE2lHfmXLjJACo9Kb/PvZT76mrT8X6d1maCx2fCmYfwgy+9DL6qLmoCdgTk35yg+900RZA==
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      filter:
+        config:
+          enabled: true
+      connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJZzjIVworfJbos1V+pBJ99fjHoenIjv428+bZiXDZJGVscxiczssS8Lc0TQIW84zmmgTz+OGDIRQ5ImVAhID7cCAwEAAQ==
+      # 连接池的配置信息
+      # 初始化时建立物理连接的个数
+      initial-size: 3
+      # 连接池最小连接数
+      min-idle: 3
+      # 连接池最大连接数
+      max-active: 20
+      # 获取连接时最大等待时间，单位毫秒
+      max-wait: 60000
+      # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+      test-while-idle: true
+      # 既作为检测的间隔时间又作为testWhileIdel执行的依据
+      time-between-connect-error-millis: 60000
+      # 销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
+      min-evictable-idle-time-millis: 30000
+      # 用来检测连接是否有效的sql 必须是一个查询语句
+      # mysql中为 select 'x'
+      # oracle中为 select 1 from dual
+      validation-query: select 'x'
+      # 申请连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
+      test-on-borrow: false
+      # 归还连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
+      test-on-return: false
+      # 是否缓存preparedStatement,mysql5.5+建议开启
+      pool-prepared-statements: true
+      # 当值大于0时poolPreparedStatements会自动修改为true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 合并多个DruidDataSource的监控数据
+      use-global-data-source-stat: false
+      # 配置扩展插件
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 定时输出统计信息到日志中，并每次输出日志会导致清零（reset）连接池相关的计数器。
+      time-between-log-stats-millis: 300000
+      # 配置DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: '/*'
+        exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+      # 配置DruidStatViewServlet
+      stat-view-servlet:
+        # 是否启用StatViewServlet（监控页面）默认值为false（考虑到安全问题默认并未启动，如需启用建议设置密码或白名单以保障安全）
+        enabled: true
+        url-pattern: '/druid/*'
+        # IP白名单(没有配置或者为空，则允许所有访问)
+        allow: 127.0.0.1,192.168.0.1
+        # IP黑名单 (存在共同时，deny优先于allow)
+        deny: 192.168.0.128
+        # 禁用HTML页面上的“Reset All”功能
+        reset-enable: false
+        # 登录名
+        login-username: admin
+        # 登录密码
+        login-password: admin
+```
+
+查看源代码可以看出，ConfigTools加密和解密使用了默认的公钥和私钥
+
+![项目结构](../screenshot/springboot/01/druid4.png)
+
+也可以自己定义加解密规则，通过DruidPasswordCallback完成揭秘验证。
+
+> [参考链接](https://blog.csdn.net/Big_Blogger/article/details/79485861)
 
 配置完成后，直接启动项目访问地址：http://localhost:8080/druid，就会出现 Druid 监控后台的登录页面
 
