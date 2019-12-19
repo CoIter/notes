@@ -61,7 +61,6 @@ typings/
 # next.js build output
 .next
 /.idea
-/deploy.sh
 .vscode/settings.json
 /package-lock.json
 dist/
