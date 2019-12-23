@@ -215,7 +215,7 @@ spring:
 
 
 
-### 数据库密码加密的配置文件
+### 数据库密码加密的配置文件(默认)
 
 在生产环境中，直接在配置文件中暴露明文密码是一件非常危险的事情，出于两点考虑：对外，即使应用服务被入侵，数据库还是安全的；对内，生产环境的数据库密码理论上应该只有 dba 知道，但是代码都是在代码仓库中放着的，如果密码没有加密，每次发布前 dba 都需要手动修改配置文件后再进行打包编译。
 
@@ -306,7 +306,151 @@ spring:
 
 也可以自己定义加解密规则，通过DruidPasswordCallback完成揭秘验证。
 
+### 数据库密码加密的配置文件(自定义)
+
 > [参考链接](https://blog.csdn.net/Big_Blogger/article/details/79485861)
+
+新建自定义秘钥生成类
+
+```java
+public class RSAUtils {
+
+    private static final String ALGORITHM = "RSA";
+    private static final String PUBLIC_KEY = "public_key";
+    private static final String PRIVATE_KEY = "private_key";
+    private static final Map<String, Object> keyMap = new HashMap<String, Object>(2);
+    /**
+     * 初始化密钥
+     *
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> initKey() throws Exception {
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(ALGORITHM);
+        keyPairGen.initialize(1024);
+        KeyPair             keyPair    = keyPairGen.generateKeyPair();
+        RSAPublicKey        publicKey  = (RSAPublicKey) keyPair.getPublic();    // 公钥
+        RSAPrivateKey       privateKey = (RSAPrivateKey) keyPair.getPrivate();     // 私钥
+        keyMap.put(PUBLIC_KEY, publicKey);
+        keyMap.put(PRIVATE_KEY, privateKey);
+        return keyMap;
+    }
+
+    private static String encrypt(String pwd) throws Exception {
+        RSAPrivateKey       privateKey = (RSAPrivateKey) keyMap.get(PRIVATE_KEY);
+        String privateKeyStr = Base64.byteArrayToBase64(privateKey.getEncoded());
+        //加密
+        String code = ConfigTools.encrypt(privateKeyStr, pwd);
+        return code;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Map<String, Object> init = initKey();
+        System.out.println("public_key--->" + Base64.byteArrayToBase64(((RSAPublicKey) keyMap.get(PUBLIC_KEY)).getEncoded()));
+        System.out.println("private_key--->" + Base64.byteArrayToBase64(((RSAPrivateKey) keyMap.get(PRIVATE_KEY)).getEncoded()));
+        String encrypt = encrypt("123456");
+        System.out.println("encrypt_password--->" + encrypt);
+    }
+}
+```
+
+继承DruidPasswordCallback处理密码
+
+```java
+public class DBPasswordCallback extends DruidPasswordCallback {
+    private static final String PUBLICKEY = "publicKey";
+    private static final String PASSWORD = "password";
+
+    @Override
+    public void setProperties(Properties properties) {
+        super.setProperties(properties);
+        //获取配置文件中加密后的密码，和xml中的connectionProperties属性配置相关
+        String publicKey = (String) properties.get(PUBLICKEY);
+        String password = (String) properties.get(PASSWORD);
+        try {
+            //解密过程，ConfigTools为druid自带，提供一些好用的函数
+            String dbpassword= ConfigTools.decrypt(publicKey, password);
+            //设置密码
+            setPassword(dbpassword.toCharArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+配置文件修改如下
+
+```properties
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    publicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgJv/tMSH8NzFqw/6BfQxNTUlwTBjh4rBSMfWJ8hhTmnpDr+Calloj9HHMxEJGyUUmy0/Rl0+snW2k5VZP/7syVQ0VdUbLzcQNi8h7PiK80QRGBc4fp8MiY+HePM7xlt9jjPLaDr3hgzn/tN/pYzXcVPB1K5btaVEpIk/yx0cHawIDAQAB
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      filter:
+        config:
+          enabled: true
+      connection-properties: publicKey=${spring.datasource.publicKey};password=B8tmo2+GByNV7vVH2rlO8aetyEqsh8MveoNn6FDCtGy99JHDVo2y3WpsxdRZMZjUuBJ5CluKGh/QB2fOxK07ifeRvGCGLpiR2fVoe4D9Jkpi10bUlUpBJf2nHjKXpf6mrVbd3iMe8T5+AmW6e9EUWaEkcjng+OOepwymUkq5GOg=
+      password-callback-class-name: com.maxsh.util.DBPasswordCallback
+      # 连接池的配置信息
+      # 初始化时建立物理连接的个数
+      initial-size: 3
+      # 连接池最小连接数
+      min-idle: 3
+      # 连接池最大连接数
+      max-active: 20
+      # 获取连接时最大等待时间，单位毫秒
+      max-wait: 60000
+      # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+      test-while-idle: true
+      # 既作为检测的间隔时间又作为testWhileIdel执行的依据
+      time-between-connect-error-millis: 60000
+      # 销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
+      min-evictable-idle-time-millis: 30000
+      # 用来检测连接是否有效的sql 必须是一个查询语句
+      # mysql中为 select 'x'
+      # oracle中为 select 1 from dual
+      validation-query: select 'x'
+      # 申请连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
+      test-on-borrow: false
+      # 归还连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
+      test-on-return: false
+      # 是否缓存preparedStatement,mysql5.5+建议开启
+      pool-prepared-statements: true
+      # 当值大于0时poolPreparedStatements会自动修改为true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 合并多个DruidDataSource的监控数据
+      use-global-data-source-stat: false
+      # 配置扩展插件
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 定时输出统计信息到日志中，并每次输出日志会导致清零（reset）连接池相关的计数器。
+      time-between-log-stats-millis: 300000
+      # 配置DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: '/*'
+        exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+      # 配置DruidStatViewServlet
+      stat-view-servlet:
+        # 是否启用StatViewServlet（监控页面）默认值为false（考虑到安全问题默认并未启动，如需启用建议设置密码或白名单以保障安全）
+        enabled: true
+        url-pattern: '/druid/*'
+        # IP白名单(没有配置或者为空，则允许所有访问)
+        allow: 127.0.0.1,192.168.0.1
+        # IP黑名单 (存在共同时，deny优先于allow)
+        deny: 192.168.0.128
+        # 禁用HTML页面上的“Reset All”功能
+        reset-enable: false
+        # 登录名
+        login-username: admin
+        # 登录密码
+        login-password: admin
+```
 
 配置完成后，直接启动项目访问地址：http://localhost:8080/druid，就会出现 Druid 监控后台的登录页面
 
