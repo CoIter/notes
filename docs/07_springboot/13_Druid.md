@@ -459,3 +459,7 @@ spring:
 输入账户和密码后，就会进入首页，首页会展示项目使用的 JDK 版本、数据库驱动、JVM 相关统计信息。
 
 ![项目结构](../screenshot/springboot/01/druid2.png)
+
+
+
+> :smiley: [源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/druid)
