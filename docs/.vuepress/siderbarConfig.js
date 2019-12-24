@@ -45,6 +45,7 @@ module.exports = {
                 ['11_MybatisAnnotation', 'SpringBoot集成Mybatis 注解版'],
                 ['12_SpringDataJPA', 'Spring Data JPA的使用'],
                 ['13_Druid', 'Spring Boot 集成 Druid 监控数据源'],
+                ['14_Memcache', 'Spring Boot 集成 Memcache'],
             ]
         }
     ]
