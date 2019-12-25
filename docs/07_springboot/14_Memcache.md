@@ -376,3 +376,9 @@ Map<InetSocketAddress,Map<String,String>> result=client.getStatsByItem("items");
 ```
 
 只要向 getStatsByItem 传入需要统计的项目名称即可，我们可以利用这个功能，来做 Memcached 状态监控等。
+
+
+
+
+
+> :smiley: [源码](:smiley: [源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/jpa-multi-datasource))
