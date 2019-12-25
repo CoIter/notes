@@ -173,3 +173,206 @@ hello=Hello,xmemcached
 证明 Memcached 配置、设置和获取值成功。
 
 ## XMemcached 语法介绍
+
+### 常用操作
+
+- add 命令，用于将 value（数据值）存储在指定的 key（键）中。如果 add 的 key 已经存在，则不会更新数据（过期的 key 会更新），之前的值将仍然保持相同，并且将获得响应 NOT_STORED。
+- replace 命令，用于替换已存在的 key（键）的 value（数据值）。如果 key 不存在，则替换失败，并且将获得响应 NOT_STORED。
+- append 命令，用于向已存在 key（键）的 value（数据值）后面追加数据。
+- prepend 命令，用于向已存在 key（键）的 value（数据值）前面追加数据。
+- deleteWithNoReply 方法，这个方法删除数据并且告诉 Memcached，不用返回应答，因此这个方法不会等待应答直接返回，比较适合于批量处理。
+
+```java
+@Test
+public void testMore() throws Exception {
+    if (!memcachedClient.set("hello", 0, "world")) {
+        System.err.println("set error");
+    }
+    if (!memcachedClient.add("hello", 0, "dennis")) {
+        System.err.println("Add error,key is existed");
+    }
+    if (!memcachedClient.replace("hello", 0, "dennis")) {
+        System.err.println("replace error");
+    }
+    memcachedClient.append("hello", " good");
+    memcachedClient.prepend("hello", "hello ");
+    String name = memcachedClient.get("hello", new StringTranscoder());
+    System.out.println(name);
+    memcachedClient.deleteWithNoReply("hello");
+}
+```
+
+### Incr 和 Decr
+
+Incr 和 Decr 类似数据的增和减，两个操作类似 Java 中的原子类如 AtomicIntger，用于原子递增或者递减变量数值，Incr 和 Decr 都有三个参数的方法，第一个参数指定递增的 key 名称，第二个参数指定递增的幅度大小，第三个参数指定当 key 不存在的情况下的初始值，两个参数的重载方法省略了第三个参数，默认指定为 0。
+
+```java
+@Test
+public void testIncrDecr() throws Exception {
+    memcachedClient.delete("Incr");
+    memcachedClient.delete("Decr");
+    System.out.println(memcachedClient.incr("Incr", 6, 12));
+    System.out.println(memcachedClient.incr("Incr", 3));
+    System.out.println(memcachedClient.incr("Incr", 2));
+    System.out.println(memcachedClient.decr("Decr", 1, 6));
+    System.out.println(memcachedClient.decr("Decr", 2));
+}
+```
+
+### Counter
+
+Xmemcached 还提供了一个称为计数器的封装，它封装了 incr/decr 方法，使用它就可以类似 AtomicLong 那样去操作计数
+
+```java
+@Test
+public void testCounter() throws Exception {
+    Counter counter = memcachedClient.getCounter("counter", 10);
+    System.out.println("counter=" + counter.get());
+    long c1 = counter.incrementAndGet();
+    System.out.println("counter=" + c1);
+    long c2 = counter.decrementAndGet();
+    System.out.println("counter=" + c2);
+    long c3 = counter.addAndGet(-10);
+    System.out.println("counter=" + c3);
+}
+```
+
+- `memcachedClient.getCounter("counter",10)`，第一个参数为计数器的 key，第二参数当 key 不存在时的默认值；
+- `counter.incrementAndGet()`，执行一次给计数器加 1；
+- `counter.decrementAndGet()`，执行一次给计数器减 1。
+
+查看 counter.addAndGet(-10) 源码（如下），发现 addAndGet() 会根据传入的值的正负来判断，选择直接给对应的 key 加多少或者减多少，底层也是使用了 incr() 和 decr() 方法。
+
+```java
+public long addAndGet(long delta) throws MemcachedException, InterruptedException, TimeoutException {
+    return delta >= 0L ? this.memcachedClient.incr(this.key, delta, this.initialValue) : this.memcachedClient.decr(this.key, -delta, this.initialValue);
+}
+```
+
+Counter 适合在高并发抢购场景下做并发控制。
+
+
+
+### CAS 操作
+
+Memcached 是通过 CAS 协议实现原子更新，所谓原子更新就是 Compare and Set，原理类似乐观锁，每次请求存储某个数据同时要附带一个 CAS 值，Memcached 比对这个 CAS 值与当前存储数据的 CAS 值是否相等，如果相等就让新的数据覆盖老的数据，如果不相等就认为更新失败，这在并发环境下特别有用。XMemcached 提供了对 CAS 协议的支持（无论是文本协议还是二进制协议），CAS 协议其实是分为两个步骤：获取 CAS 值和尝试更新，因此一个典型的使用场景如下：
+
+```java
+GetsResponse<Integer> result = client.gets("a");
+long cas = result.getCas(); 
+//尝试将 a 的值更新为 2
+if (!client.cas("a", 0, 2, cas)) {
+    System.err.println("cas error");
+}
+```
+
+首先通过 gets 方法获取一个 GetsResponse，此对象包装了存储的数据和 CAS 值，然后通过 CAS 方法尝试原子更新，如果失败打印“cas error”。显然，这样的方式很繁琐，并且如果你想尝试多少次原子更新就需要一个循环来包装这一段代码，因此 XMemcached 提供了一个 *CASOperation* 接口包装了这部分操作，允许你尝试 N 次去原子更新某个 key 存储的数据，无需显式地调用 gets 获取 CAS 值，上面的代码简化为:
+
+```java
+client.cas("a", 0, new CASOperation<Integer>() {
+             public int getMaxTries() {
+            return 1;
+        }
+
+        public Integer getNewValue(long currentCAS, Integer currentValue) {
+                return 2;
+        }
+});
+```
+
+CASOpertion 接口只有两个方法，一个是设置最大尝试次数的 getMaxTries 方法，这里是尝试一次，如果尝试超过这个次数没有更新成功将抛出一个 TimeoutException，如果你想无限尝试（理论上），可以将返回值设定为 Integer.MAX_VALUE；另一个方法是根据当前获得的 GetsResponse 来决定更新数据的 getNewValue 方法，如果更新成功，这个方法返回的值将存储成功，其两个参数是最新一次 gets 返回的 GetsResponse 结果。
+
+### 设置超时时间
+
+XMemcached 由于是基于 nio，因此通讯过程本身是异步的，client 发送一个请求给 Memcached，你是无法确定 Memcached 什么时候返回这个应答，客户端此时只有等待，因此还有个等待超时的概念在这里。客户端在发送请求后，开始等待应答，如果超过一定时间就认为操作失败，这个等待时间默认是 5 秒，也可以在获取的时候配置超时时间。
+
+```java
+value = memcachedClient.get("hello",3000);
+```
+
+就是等待 3 秒超时，如果 3 秒超时就跑出 TimeutException，用户需要自己处理这个异常。因为等待是通过调用 CountDownLatch.await(timeout) 方法，所以用户还需要处理中断异常 InterruptException，最后的 MemcachedException 表示 Xmemcached 内部发生的异常，如解码编码错误、网络断开等异常情况。
+
+### 更新缓存过期时间
+
+经常有这样的需求，就是希望更新缓存数据的超时时间（expire time），现在 Memcached 已经支持 touch 协议，只需要传递 key 就更新缓存的超时时间：
+
+```java
+memcachedClient.touch(key,new-expire-time);
+```
+
+有时候你希望获取缓存数据并更新超时时间，这时候可以用 getAndTouch 方法（仅二进制协议支持）
+
+```
+memcachedClient.getAndTouch(key,new-expire-time);
+```
+
+如果在使用过程中报以下错误，说明安装的 Memcached 服务不支持 touch 命令，建议升级。
+
+```java
+Caused by: net.rubyeye.xmemcached.exception.UnknownCommandException: Response error,error message:Unknow command TOUCH,key=Touch
+    at net.rubyeye.xmemcached.command.Command.decodeError(Command.java:250)
+```
+
+## Memcached 集群
+
+Memcached 的分布是通过客户端实现的，客户端根据 key 的哈希值得到将要存储的 Memcached 节点，并将对应的 value 存储到相应的节点。
+
+XMemcached 同样支持客户端的分布策略，默认分布的策略是按照 key 的哈希值模以连接数得到的余数，对应的连接就是将要存储的节点。如果使用默认的分布策略，不需要做任何配置或者编程。
+
+XMemcached 同样支持[一致性哈希](http://en.wikipedia.org/wiki/Consistent_hashing)（Consistent Hash)，通过编程设置：
+
+```java
+MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses("server1:11211 server2:11211 server3:11211"));
+builder.setSessionLocator(new KetamaMemcachedSessionLocator());
+MemcachedClient client=builder.build();
+```
+
+XMemcached 还提供了额外的一种哈希算法——选举散列，在某些场景下可以替代一致性哈希：
+
+```java
+MemcachedClientBuilder builder = new XMemcachedClientBuilder(
+                                    AddrUtil.getAddresses("server1:11211 server2:11211 server3:11211"));
+builder.setSessionLocator(new ElectionMemcachedSessionLocator());
+MemcachedClient mc = builder.build();
+```
+
+在集群的状态下可以给每个服务设置不同的权重：
+
+```java
+MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses("localhost:12000 localhost:12001"),new int[]{1,3});
+MemcachedClient memcachedClient=builder.build();
+```
+
+
+
+## SASL 验证
+
+Memcached 1.4.3 开始支持 SASL 验证客户端，在服务器配置启用 SASL 之后，客户端需要通过授权验证才可以跟 Memcached 继续交互，否则将被拒绝请求，XMemcached 1.2.5 开始支持这个特性。假设 Memcached 设置了 SASL 验证，典型地使用 CRAM-MD 5 或者 PLAIN 的文本用户名和密码的验证机制，假设用户名为 cacheuser，密码为 123456，那么编程的方式如下：
+
+```java
+MemcachedClientBuilder builder = new XMemcachedClientBuilder(
+                AddrUtil.getAddresses("localhost:11211"));
+builder.addAuthInfo(AddrUtil.getOneAddress("localhost:11211"), AuthInfo
+                .typical("cacheuser", "123456"));
+// Must use binary protocol
+builder.setCommandFactory(new BinaryCommandFactory());
+MemcachedClient client=builder.build();
+```
+
+请注意，授权验证仅支持二进制协议。
+
+## 查看统计信息
+
+Memcached 提供了统计协议用于查看统计信息：
+
+```java
+Map<InetSocketAddress,Map<String,String>> result=client.getStats();
+```
+
+getStats 方法返回一个 map ，其中存储了所有已经连接并且有效的 Memcached 节点返回的统计信息，你也可以统计具体的项目，如统计 items 项目：
+
+```java
+Map<InetSocketAddress,Map<String,String>> result=client.getStatsByItem("items");
+```
+
+只要向 getStatsByItem 传入需要统计的项目名称即可，我们可以利用这个功能，来做 Memcached 状态监控等。
