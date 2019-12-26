@@ -47,6 +47,7 @@ module.exports = {
                 ['13_Druid', 'Spring Boot 集成 Druid 监控数据源'],
                 ['14_Memcache', 'Spring Boot 集成 Memcache'],
                 ['15_Redis', 'Spring Boot 集成 Redis'],
+                ['16_RedisSession', 'Redis 实现Session共享'],
             ]
         }
     ]

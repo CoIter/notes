@@ -322,3 +322,9 @@ zscore user:1:20180106 mike  zrank user:1:20180106 mike
 ## 项目中应用
 
 在我们实际的使用过程中，不会给每一个使用的类都注入 redisTemplate 来直接使用，一般都会对业务进行简单的包装，最后提供出来对外使用。
+
+
+
+
+
+> :smiley:    ​[源码](https://github.com/maxsh-io/proj_springboot_case/tree/master/redis)
