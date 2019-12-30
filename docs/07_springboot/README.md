@@ -16,6 +16,11 @@ description: springboot笔记
   - [SpringBoot使用JDBC操作数据库](09_Jdbc.md)
   - [SpringBoot集成Mybatis XML 配置版](10_MybatisXML.md)
   - [SpringBoot集成Mybatis 注解版](11_MybatisAnnotation.md)
+  - [Spring Data JPA的使用](12_SpringDataJPA.md)
+  - [Spring Boot 集成 Druid 监控数据源](13_Druid.md)
+  - [Spring Boot 集成 Memcache](14_Memcache.md)
+  - [Spring Boot 集成 Redis](15_Redis.md)
+  - [Redis 实现Session共享](16_RedisSession.md)
 ------
 <br/><br/><br/><br/><br/><br/>
 

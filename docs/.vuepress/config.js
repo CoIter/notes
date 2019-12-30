@@ -6,7 +6,7 @@ module.exports = {
     title: 'MAXSH NOTES',
     description: 'Java、前端开发、spring系列全家桶、Linux、高并发、容器、CICD',
     dest: './dist',//默认在.vuepress下
-    base: '/notes/',
+    // base: '/notes/',
     port: 8088,
     locales: {
         '/': {
