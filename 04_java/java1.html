@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>java常用工具类 | MAXSH NOTES</title>
+    <meta name="description" content="java常用工具类">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/icons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+    
+    <link rel="preload" href="/assets/css/0.styles.53bed4c3.css" as="style"><link rel="preload" href="/assets/js/app.fb9aeb92.js" as="script"><link rel="preload" href="/assets/js/2.3b98a9ec.js" as="script"><link rel="preload" href="/assets/js/22.ee261d60.js" as="script"><link rel="preload" href="/assets/js/7.2146668d.js" as="script"><link rel="prefetch" href="/assets/js/10.e79002b5.js"><link rel="prefetch" href="/assets/js/11.a0ca7616.js"><link rel="prefetch" href="/assets/js/12.790a2fa6.js"><link rel="prefetch" href="/assets/js/13.8fc0caaa.js"><link rel="prefetch" href="/assets/js/14.39a19598.js"><link rel="prefetch" href="/assets/js/15.9e8e567e.js"><link rel="prefetch" href="/assets/js/16.5146b6f2.js"><link rel="prefetch" href="/assets/js/17.c933c97e.js"><link rel="prefetch" href="/assets/js/18.2638b416.js"><link rel="prefetch" href="/assets/js/19.d62f5327.js"><link rel="prefetch" href="/assets/js/20.b426461c.js"><link rel="prefetch" href="/assets/js/21.98c94019.js"><link rel="prefetch" href="/assets/js/23.ce2131a6.js"><link rel="prefetch" href="/assets/js/24.b184e7f4.js"><link rel="prefetch" href="/assets/js/25.2ad1ecee.js"><link rel="prefetch" href="/assets/js/26.465d4f9a.js"><link rel="prefetch" href="/assets/js/27.7b77fa56.js"><link rel="prefetch" href="/assets/js/28.6eba6aa8.js"><link rel="prefetch" href="/assets/js/29.a61ab99c.js"><link rel="prefetch" href="/assets/js/3.c7b8ed7f.js"><link rel="prefetch" href="/assets/js/30.236845a5.js"><link rel="prefetch" href="/assets/js/31.0fc36ead.js"><link rel="prefetch" href="/assets/js/32.84e16998.js"><link rel="prefetch" href="/assets/js/33.7ba8a905.js"><link rel="prefetch" href="/assets/js/34.47787ef7.js"><link rel="prefetch" href="/assets/js/35.57c8f76a.js"><link rel="prefetch" href="/assets/js/36.10b5ba1b.js"><link rel="prefetch" href="/assets/js/37.d9863cfb.js"><link rel="prefetch" href="/assets/js/4.e0752412.js"><link rel="prefetch" href="/assets/js/5.843cb0b9.js"><link rel="prefetch" href="/assets/js/6.f0192e09.js"><link rel="prefetch" href="/assets/js/8.8ba8e383.js"><link rel="prefetch" href="/assets/js/9.387923a2.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.53bed4c3.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/images/logo.png" alt="MAXSH NOTES" class="logo"> <span class="site-name can-hide">MAXSH NOTES</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">主页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="练习项目" class="dropdown-title"><span class="title">练习项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/01_proj/springboot_mybatisplus.html" class="nav-link">SpringBoot集成MyBatisPlus</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="学习笔记" class="dropdown-title"><span class="title">学习笔记</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>后端笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/04_java/" class="nav-link router-link-active">java</a></li><li class="dropdown-subitem"><a href="/06_spring/" class="nav-link">spring</a></li><li class="dropdown-subitem"><a href="/07_springboot/" class="nav-link">springboot</a></li></ul></li><li class="dropdown-item"><h4>Linux</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/05_linux/" class="nav-link">linux</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="工具" class="dropdown-title"><span class="title">工具</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/02_guide/" class="nav-link">markdown语法</a></li><li class="dropdown-item"><!----> <a href="http://docs.nigeerhuo.com/docker" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Docker绿皮书
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-item"><!----> <a href="/08_tool/01_tree.html" class="nav-link">用命令行生成目录结构树</a></li><li class="dropdown-item"><!----> <a href="http://freemarker.foofun.cn/dgui_template_overallstructure.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  freemarker在线手册
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></div></div><div class="nav-item"><a href="/03_about/" class="nav-link">about</a></div><div class="nav-item"><a href="https://gitee.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Gitee
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <a href="https://github.com/maxsh-io/notes" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">主页</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="练习项目" class="dropdown-title"><span class="title">练习项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/01_proj/springboot_mybatisplus.html" class="nav-link">SpringBoot集成MyBatisPlus</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="学习笔记" class="dropdown-title"><span class="title">学习笔记</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>后端笔记</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/04_java/" class="nav-link router-link-active">java</a></li><li class="dropdown-subitem"><a href="/06_spring/" class="nav-link">spring</a></li><li class="dropdown-subitem"><a href="/07_springboot/" class="nav-link">springboot</a></li></ul></li><li class="dropdown-item"><h4>Linux</h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/05_linux/" class="nav-link">linux</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="工具" class="dropdown-title"><span class="title">工具</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/02_guide/" class="nav-link">markdown语法</a></li><li class="dropdown-item"><!----> <a href="http://docs.nigeerhuo.com/docker" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Docker绿皮书
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li><li class="dropdown-item"><!----> <a href="/08_tool/01_tree.html" class="nav-link">用命令行生成目录结构树</a></li><li class="dropdown-item"><!----> <a href="http://freemarker.foofun.cn/dgui_template_overallstructure.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  freemarker在线手册
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></li></ul></div></div><div class="nav-item"><a href="/03_about/" class="nav-link">about</a></div><div class="nav-item"><a href="https://gitee.com/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Gitee
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <a href="https://github.com/maxsh-io/notes" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav>  <ul class="sidebar-links"><li><a href="/04_java/" class="sidebar-link">简介</a></li><li><a href="/04_java/java1.html" class="active sidebar-link">java常用工具类</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="java常用工具类"><a href="#java常用工具类" class="header-anchor">#</a> java常用工具类</h1> <h4 id="一-org-apache-commons-io-ioutils"><a href="#一-org-apache-commons-io-ioutils" class="header-anchor">#</a> 一. org.apache.commons.io.IOUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>closeQuietly：关闭一个IO流、socket、或者selector且不抛出异常，通常放在finally块
+toString：转换IO流、 Uri、 byte[]为String
+copy：IO流数据复制，从输入流写到输出流中，最大支持2GB
+toByteArray：从输入流、URI获取byte[]
+write：把字节. 字符等写入输出流
+toInputStream：把字符转换为输入流
+readLines：从输入流中读取多行数据，返回List&lt;String&gt;
+copyLarge：同copy，支持2GB以上数据的复制
+lineIterator：从输入流返回一个迭代器，根据参数要求读取的数据量，全部读取，如果数据不够，则失败复制代码
+</code></pre></div><h4 id="二-org-apache-commons-io-fileutils"><a href="#二-org-apache-commons-io-fileutils" class="header-anchor">#</a> 二. org.apache.commons.io.FileUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>deleteDirectory：删除文件夹
+readFileToString：以字符形式读取文件内容
+deleteQueitly：删除文件或文件夹且不会抛出异常
+copyFile：复制文件
+writeStringToFile：把字符写到目标文件，如果文件不存在，则创建
+forceMkdir：强制创建文件夹，如果该文件夹父级目录不存在，则创建父级
+write：把字符写到指定文件中
+listFiles：列举某个目录下的文件(根据过滤器)
+copyDirectory：复制文件夹
+forceDelete：强制删除文件复制代码
+</code></pre></div><h4 id="三-org-apache-commons-lang-stringutils"><a href="#三-org-apache-commons-lang-stringutils" class="header-anchor">#</a> 三. org.apache.commons.lang.StringUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>isBlank：字符串是否为空 (trim后判断)
+isEmpty：字符串是否为空 (不trim并判断)
+equals：字符串是否相等
+join：合并数组为单一字符串，可传分隔符
+split：分割字符串
+EMPTY：返回空字符串
+trimToNull：trim后为空字符串则转换为null
+replace：替换字符串复制代码
+</code></pre></div><h4 id="四-org-apache-http-util-entityutils"><a href="#四-org-apache-http-util-entityutils" class="header-anchor">#</a> 四. org.apache.http.util.EntityUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>toString：把Entity转换为字符串
+consume：确保Entity中的内容全部被消费。可以看到源码里又一次消费了Entity的内容，假如用户没有消费，那调用Entity时候将会把它消费掉
+toByteArray：把Entity转换为字节流
+consumeQuietly：和consume一样，但不抛异常
+getContentCharset：获取内容的编码复制代码
+</code></pre></div><h4 id="五-org-apache-commons-lang3-stringutils"><a href="#五-org-apache-commons-lang3-stringutils" class="header-anchor">#</a> 五. org.apache.commons.lang3.StringUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>isBlank：字符串是否为空 (trim后判断)
+isEmpty：字符串是否为空 (不trim并判断)
+equals：字符串是否相等
+join：合并数组为单一字符串，可传分隔符
+split：分割字符串
+EMPTY：返回空字符串
+replace：替换字符串
+capitalize：首字符大写复制代码
+</code></pre></div><h4 id="六-org-apache-commons-io-filenameutils"><a href="#六-org-apache-commons-io-filenameutils" class="header-anchor">#</a> 六. org.apache.commons.io.FilenameUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>getExtension：返回文件后缀名
+getBaseName：返回文件名，不包含后缀名
+getName：返回文件全名
+concat：按命令行风格组合文件路径(详见方法注释)
+removeExtension：删除后缀名
+normalize：使路径正常化
+wildcardMatch：匹配通配符
+seperatorToUnix：路径分隔符改成unix系统格式的，即/
+getFullPath：获取文件路径，不包括文件名
+isExtension：检查文件后缀名是不是传入参数(List&lt;String&gt;)中的一个复制代码
+</code></pre></div><h4 id="七-org-springframework-util-stringutils"><a href="#七-org-springframework-util-stringutils" class="header-anchor">#</a> 七. org.springframework.util.StringUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>hasText：检查字符串中是否包含文本
+hasLength：检测字符串是否长度大于0
+isEmpty：检测字符串是否为空（若传入为对象，则判断对象是否为null）
+commaDelimitedStringToArray：逗号分隔的String转换为数组
+collectionToDelimitedString：把集合转为CSV格式字符串
+replace 替换字符串
+7. delimitedListToStringArray：相当于split
+uncapitalize：首字母小写
+collectionToDelimitedCommaString：把集合转为CSV格式字符串
+tokenizeToStringArray：和split基本一样，但能自动去掉空白的单词复制代码
+</code></pre></div><h4 id="八-org-apache-commons-lang-arrayutils"><a href="#八-org-apache-commons-lang-arrayutils" class="header-anchor">#</a> 八. org.apache.commons.lang.ArrayUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>contains：是否包含某字符串
+addAll：添加整个数组
+clone：克隆一个数组
+isEmpty：是否空数组
+add：向数组添加元素
+subarray：截取数组
+indexOf：查找某个元素的下标
+isEquals：比较数组是否相等
+toObject：基础类型数据数组转换为对应的Object数组复制代码
+</code></pre></div><h4 id="九-org-apache-commons-lang-stringescapeutils"><a href="#九-org-apache-commons-lang-stringescapeutils" class="header-anchor">#</a> 九. org.apache.commons.lang.StringEscapeUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>参考十五：org.apache.commons.lang3.StringEscapeUtils复制代码
+</code></pre></div><h4 id="十-org-apache-http-client-utils-urlencodedutils"><a href="#十-org-apache-http-client-utils-urlencodedutils" class="header-anchor">#</a> 十. org.apache.http.client.utils.URLEncodedUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>format：格式化参数，返回一个HTTP POST或者HTTP PUT可用application/x-www-form-urlencoded字符串
+parse：把String或者URI等转换为List&lt;NameValuePair&gt;复制代码
+</code></pre></div><h4 id="十一-org-apache-commons-codec-digest-digestutils"><a href="#十一-org-apache-commons-codec-digest-digestutils" class="header-anchor">#</a> 十一. org.apache.commons.codec.digest.DigestUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>md5Hex：MD5加密，返回32位字符串
+sha1Hex：SHA-1加密
+sha256Hex：SHA-256加密
+sha512Hex：SHA-512加密
+md5：MD5加密，返回16位字符串复制代码
+</code></pre></div><h4 id="十二-org-apache-commons-collections-collectionutils"><a href="#十二-org-apache-commons-collections-collectionutils" class="header-anchor">#</a> 十二. org.apache.commons.collections.CollectionUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>isEmpty：是否为空
+select：根据条件筛选集合元素
+transform：根据指定方法处理集合元素，类似List的map()
+filter：过滤元素，雷瑟List的filter()
+find：基本和select一样
+collect：和transform 差不多一样，但是返回新数组
+forAllDo：调用每个元素的指定方法
+isEqualCollection：判断两个集合是否一致复制代码
+</code></pre></div><h4 id="十三-org-apache-commons-lang3-arrayutils"><a href="#十三-org-apache-commons-lang3-arrayutils" class="header-anchor">#</a> 十三. org.apache.commons.lang3.ArrayUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>contains：是否包含某个字符串
+addAll：添加整个数组
+clone：克隆一个数组
+isEmpty：是否空数组
+add：向数组添加元素
+subarray：截取数组
+indexOf：查找某个元素的下标
+isEquals：比较数组是否相等
+toObject：基础类型数据数组转换为对应的Object数组复制代码
+</code></pre></div><h4 id="十四-org-apache-commons-beanutils-propertyutils"><a href="#十四-org-apache-commons-beanutils-propertyutils" class="header-anchor">#</a> 十四. org.apache.commons.beanutils.PropertyUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>getProperty：获取对象属性值
+setProperty：设置对象属性值
+getPropertyDiscriptor：获取属性描述器
+isReadable：检查属性是否可访问
+copyProperties：复制属性值，从一个对象到另一个对象
+getPropertyDiscriptors：获取所有属性描述器
+isWriteable：检查属性是否可写
+getPropertyType：获取对象属性类型复制代码
+</code></pre></div><h4 id="十五-org-apache-commons-lang3-stringescapeutils"><a href="#十五-org-apache-commons-lang3-stringescapeutils" class="header-anchor">#</a> 十五. org.apache.commons.lang3.StringEscapeUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>unescapeHtml4：转义html
+escapeHtml4：反转义html
+escapeXml：转义xml
+unescapeXml：反转义xml
+escapeJava：转义unicode编码
+escapeEcmaScript：转义EcmaScript字符
+unescapeJava：反转义unicode编码
+escapeJson：转义json字符
+escapeXml10：转义Xml10复制代码
+</code></pre></div><p>这个现在已经废弃了，建议使用commons-text包里面的方法。</p> <h4 id="十六-org-apache-commons-beanutils-beanutils"><a href="#十六-org-apache-commons-beanutils-beanutils" class="header-anchor">#</a> 十六. org.apache.commons.beanutils.BeanUtils</h4> <div class="language- extra-class"><pre class="language-text"><code>copyPeoperties：复制属性值，从一个对象到另一个对象
+getProperty：获取对象属性值
+setProperty：设置对象属性值
+populate：根据Map给属性复制
+copyPeoperty：复制单个值，从一个对象到另一个对象
+cloneBean：克隆bean实例复制代码
+</code></pre></div><p>现在你只要了解了以上16种最流行的工具类方法，你就不必要再自己写工具类了，不必重复造轮子。大部分工具类方法通过其名字就能明白其用途，如果不清楚的，可以看下别人是怎么用的，或者去网上查询其用法。</p> <p>另外，工具类，根据阿里开发手册，包名如果要使用util不能带s，工具类命名为     <code>XxxUtils</code></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/maxsh-io/notes/edit/master/docs/04_java/java1.md" target="_blank" rel="noopener noreferrer">修改文档！</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2019-11-11 23:40:11</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/04_java/" class="prev router-link-active">简介</a></span> <!----></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.fb9aeb92.js" defer></script><script src="/assets/js/2.3b98a9ec.js" defer></script><script src="/assets/js/22.ee261d60.js" defer></script><script src="/assets/js/7.2146668d.js" defer></script>
+  </body>
+</html>
