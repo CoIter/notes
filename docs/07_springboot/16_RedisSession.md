@@ -106,3 +106,46 @@ public class SessionConfig {
 maxInactiveIntervalInSeconds: 设置 Session 失效时间，使用 Redis Session 之后，原 Spring Boot 中的 server.session.timeout 属性不再生效。
 
 :::
+
+仅仅需要这两步 Spring Boot 分布式 Session 就配置完成了。
+
+在 Web 层写两个方法进行验证。
+
+```java
+@RestController
+public class RedisSessionController {
+
+    @Value("${server.port}")
+    private String port;
+
+    @RequestMapping(value = "/setSession")
+    public Map<String, Object> setSession (HttpServletRequest request){
+        Map<String, Object> map = new HashMap<>();
+        request.getSession().setAttribute("message", request.getRequestURL());
+        map.put("server.port", port);
+        map.put("request Url", request.getRequestURL());
+        return map;
+    }
+
+    @RequestMapping(value = "/getSession")
+    public Object getSession (HttpServletRequest request){
+        Map<String, Object> map = new HashMap<>();
+        map.put("server.port", port);
+        map.put("sessionId", request.getSession().getId());
+        map.put("message", request.getSession().getAttribute("message"));
+        return map;
+    }
+}
+```
+
+将项目复制一份并将端口改为8081，然后启动这两个项目。首先访问8080服务 http://localhost:8080/setSession
+
+![项目结构](../screenshot/springboot/01/session1.png)
+
+然后访问8081端口http://localhost:8081/getSession
+
+![项目结构](../screenshot/springboot/01/session3.png)
+
+
+
+通过对比发现，8080 和 9090 服务返回的 Session 信息完全一致，说明已经实现了 Session 共享。
